@@ -21,11 +21,7 @@ export class K8sAwsContainerInsightsSetup extends Stack{
         super(scope,id,props);
 
         //let's use FluentD as described on AWS Container Insights documentation and migrate to FluentBit later (with CDK8S)
-        this.createCloudWatchAgent(props);
-
-        
-
-        
+        this.createCloudWatchAgent(props); 
     }
 
     private createCloudWatchAgent(props: K8sAwsContainerInsightsSetupProperties) {
