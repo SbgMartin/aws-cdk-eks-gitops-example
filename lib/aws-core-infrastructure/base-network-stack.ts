@@ -11,6 +11,7 @@ export class BaseNetworkStack extends Stack {
     public readonly cfnOutputVpcId: CfnOutput;
     public readonly vpc: Vpc;
 
+    //@Todo: is this still needed? 
     get availabilityZones(): string[] {
         return ['eu-central-1a', 'eu-central-1b','eu-central-1c'];
       }

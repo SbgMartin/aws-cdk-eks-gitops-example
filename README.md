@@ -14,9 +14,9 @@ I personally use https://snyk.io/security-scanner-vuln-cost/ which is a communit
 
 # How to use this code?
 
-Reading purpose. You can also give it a try and clone it into a AWS CodeCommit Repository (then you need to either pass the name to yarn run cdk synth command as context parameter or store it directly in context.json). The first time you need to explicit run yarn cdk deploy --profile ... but be ware that your AWS Account needs to be bootstrapped with the latest version in order to support the new synthesis (also, check the context.json - there is plenty of blogs and documentation around what this is and why it's needed).
+First of all this is for my own reference and related to my daily work. I am sharing this because some things are hard to find out and maybe someone has also some feedback (always appreciated :-)). You can also give it a try and clone it into a AWS CodeCommit Repository (then you need to either pass the name to yarn run cdk synth command as context parameter or store it directly in context.json). The first time you need to explicit run yarn cdk deploy --profile ... but be ware that your AWS Account needs to be bootstrapped with the latest version in order to support the new synthesis (also, check the context.json - there is plenty of blogs and documentation around what this is and why it's needed).
 
-MultiAccount deployment is prepared but not fully implemented so far.
+MultiAccount deployment is prepared but not fully implemented so far. Also Stages for Test and Prod are to be added.
 
 # Stack-Naming
 

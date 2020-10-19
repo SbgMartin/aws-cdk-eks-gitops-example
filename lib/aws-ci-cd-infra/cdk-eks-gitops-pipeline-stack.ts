@@ -59,6 +59,7 @@ export class CdkEksGitOpsPipelineStack extends Stack {
 
       //ToDo: validation step needed with automated approval - precondition for next stage to execute
 
+      //ToDo: deploy to other stage
 /*
       //Stage to deploy all relevant stacks to test account, e.g. for user-acceptance-test
       const testStageDeployment = new CdkEksGitOpsSetupStage(this, `${this.testAccountContext.shortPrefix}-${this.businessContext.longContext}`, {
