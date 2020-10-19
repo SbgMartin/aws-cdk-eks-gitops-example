@@ -14,12 +14,14 @@ I personally use https://snyk.io/security-scanner-vuln-cost/ which is a communit
 
 # How to use this code?
 
-First of all this is for my own reference and related to my daily work. I am sharing this because some things are hard to find out and maybe someone has also some feedback (always appreciated :-)). You can also give it a try and clone it into a AWS CodeCommit Repository (then you need to either pass the name to yarn run cdk synth command as context parameter or store it directly in context.json). The first time you need to explicit run yarn cdk deploy --profile ... but be ware that your AWS Account needs to be bootstrapped with the latest version in order to support the new synthesis (also, check the context.json - there is plenty of blogs and documentation around what this is and why it's needed).
+It's for reference and knowledge exchange. I am sharing this because some things are hard to find out and maybe someone has also some feedback (always appreciated :-)). You can also give it a try and clone it into a AWS CodeCommit Repository (then you need to either pass the name to yarn run cdk synth command as context parameter or store it directly in context.json). The first time you need to explicit run yarn cdk deploy --profile ... but be ware that your AWS Account needs to be bootstrapped with the latest version in order to support the new synthesis (also, check the context.json - there is plenty of blogs and documentation around what this is and why it's needed).
 
 MultiAccount deployment is prepared but not fully implemented so far. Also Stages for Test and Prod are to be added.
 
 Currently it's bound to eu-central-1 as there are some issues with lookup (at least in a lower version of CDK in conjunction with CDK Pipelines, need to verify if this is still the case). Change the AZ lookup here, if desired. 
 https://github.com/SbgMartin/aws-cdk-eks-gitops-example/blob/eeb4c38cbb1a93097ce04e20818173bd25c3a284/lib/aws-core-infrastructure/base-network-stack.ts#L15
+
+Before you do yarn cdk synth or similar, please look at https://github.com/SbgMartin/aws-cdk-eks-gitops-example/blob/b4e290da1888d9ccc459db2bd6672a19002cad30/cdk.json and either manually enter the values which are relevant to you or pass them as parameters within cdk synth command! Otherwise it will not synthesize.
 
 # Stack-Naming
 
