@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Launch via NPM",
+            "request": "launch",
+            "runtimeArgs": [
+                "cdk",
+                "synth"
+            ],
+            "runtimeExecutable": "npx",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+        "type": "node",
+        "request": "launch",
+        "name": "Launch Program",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        "runtimeArgs": [
+            "-r", "./node_modules/ts-node/register/transpile-only"
+        ],
+        "args": [
+            "${workspaceFolder}/bin/cdk-eks-gitops.ts"
+        ]
+        }
+    ]
+}
