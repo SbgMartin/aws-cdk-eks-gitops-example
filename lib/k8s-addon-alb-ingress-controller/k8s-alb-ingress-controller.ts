@@ -23,10 +23,6 @@ export class K8sAlbIngressController extends Stack {
 
         this.namespaceName = "alb-ingress";
 
-        //first we need to enhance permissions for AWS related assets for the ALB Ingress AWS parts which is the ALB itself + additional resources like WAF
-        //this leads to the fact that this stack is created BEFORE the EKS Core Stack is created
-        //props.workerNodeGroup.role.addManagedPolicy(this.createIamPolicy());
-
         //Subnet tagging is essential for the ALB Controller to know which ones need to be assigned to the ALB instance
         props.vpc.publicSubnets.forEach((subnet) => {
           Aspects.of(subnet).add(new Tag('kubernetes.io/role/elb', '1', { includeResourceTypes: ['AWS::EC2::Subnet'] }));
