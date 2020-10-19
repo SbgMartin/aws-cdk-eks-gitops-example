@@ -1,9 +1,8 @@
-import { Cluster, KubernetesManifest, KubernetesPatch, Nodegroup } from "@aws-cdk/aws-eks";
-import { Construct, Stack, StackProps, TokenComparison } from "@aws-cdk/core";
+import { Cluster, KubernetesPatch } from "@aws-cdk/aws-eks";
+import { Construct, Stack, StackProps } from "@aws-cdk/core";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import { EksCoreStack } from "../aws-container-runtime-setup/aws-eks-core-stack";
-import { Effect, IManagedPolicy, ManagedPolicy, PolicyStatement, Role } from "@aws-cdk/aws-iam";
+import { Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 
 interface K8sAwsContainerInsightsSetupProperties extends StackProps {
     environment: string,
@@ -19,12 +18,6 @@ export class K8sAwsContainerInsightsSetup extends Stack{
     constructor(scope: Construct, id: string, props: K8sAwsContainerInsightsSetupProperties){
 
         super(scope,id,props);
-
-        //let's use FluentD as described on AWS Container Insights documentation and migrate to FluentBit later (with CDK8S)
-        this.createCloudWatchAgent(props); 
-    }
-
-    private createCloudWatchAgent(props: K8sAwsContainerInsightsSetupProperties) {
 
         //first we retrieve all K8s manifests from file-assets folder
         //we use fs.readFileSync as Nodejs event loop is being blocked, which means you can immediately react on exceptions
@@ -45,7 +38,8 @@ export class K8sAwsContainerInsightsSetup extends Stack{
                                         cloudWatchAgentDaemonSetManifest);
         
         const cwAgentConfigMap = props.eksCluster.addManifest('aws-container-insights-cm', cloudWatchAgentConfigMapManifest);
-        
+        cwAgentConfigMap.node.addDependency(cloudWatchAgentCompositeManifest);
+
         //obviously creating Service accounts is best to be done via method instead of KubernetesManifest
         const containerInsightsServiceAccount = props.eksCluster.addServiceAccount('aws-container-insights-sa',{
             name: 'cloudwatch-agent', 
@@ -54,6 +48,8 @@ export class K8sAwsContainerInsightsSetup extends Stack{
         //we use the ServiceAccount to AWS IAM Roles relation to provide proper permission
         containerInsightsServiceAccount.addToPolicy(this.createCwAgentStatement());
         containerInsightsServiceAccount.addToPolicy(this.createCwAgentSsmStatement());
+
+        containerInsightsServiceAccount.node.addDependency(cloudWatchAgentCompositeManifest);
 
         //The issue here is the configuration content within the K8s manifests - in older times your pipeline might have used ENVSUBST to substitute
         //placeholders within the file and apply the newly generated one - in this example we are using KubernetesPatch to fix that :-) :-(
@@ -75,11 +71,16 @@ export class K8sAwsContainerInsightsSetup extends Stack{
             }
         });
 
+        cloudwatchAgentResourcesPatch.node.addDependency(cloudWatchAgentCompositeManifest);
+
+        //now comes the FluentD part
         const fluentdServiceAccount = props.eksCluster.addServiceAccount('aws-container-insights-fluentd',{
             name: "fluentd", 
             namespace: "amazon-cloudwatch" });
 
         fluentdServiceAccount.addToPolicy(this.createCwAgentStatement());
+       
+        fluentdServiceAccount.node.addDependency(cloudWatchAgentCompositeManifest);
 
         //fetch RBAC assets from manifest asset
         const selectionCriteria = ["ConfigMap","ServiceAccount"];
@@ -101,13 +102,16 @@ export class K8sAwsContainerInsightsSetup extends Stack{
           }
         });
 
+        fluentDbaseConfigMap.node.addDependency(cloudWatchAgentCompositeManifest);
+
         //again, this is a demo repo for workshops - thus we extract now exactly that part from manifest relevant
         const fluentDappConfig = yaml.safeLoadAll(fs.readFileSync('./lib/k8s-addon-aws-container-insights/file-assets/cwagent-fluentd-quickstart.yaml').toString()).filter( k8sResource => k8sResource['metadata']['name'] === 'fluentd-config');
 
         const fluentdCompositeManifest = props.eksCluster.addManifest('aws-container-insights-fluentd-setup',
             ...fluentDmanifest,
             ...fluentDappConfig);
-
+        
+        fluentdCompositeManifest.node.addDependency(cloudWatchAgentCompositeManifest);
         cloudwatchAgentResourcesPatch.node.addDependency(cloudWatchAgentCompositeManifest);
     }
 
