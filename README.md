@@ -1,4 +1,4 @@
-# AWS CDK example project
+# AWS CDK Pipelines for EKS, AWS Container Insights, ALB Ingress Controller, Flux and CDK8S
 
 This project contains resources which allow to learn about CDK Pipelines, AWS EKS with CDK as well as integration of CDK8S. Especially when it comes to application deployment for demo and learning purpose you'll find different variants how to specify Kubernetes Manifests (inline, file, CDK8S).
 
