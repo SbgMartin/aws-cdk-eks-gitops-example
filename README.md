@@ -18,6 +18,9 @@ First of all this is for my own reference and related to my daily work. I am sha
 
 MultiAccount deployment is prepared but not fully implemented so far. Also Stages for Test and Prod are to be added.
 
+Currently it's bound to eu-central-1 as there are some issues with lookup (at least in a lower version of CDK in conjunction with CDK Pipelines, need to verify if this is still the case). Change the AZ lookup here, if desired. 
+https://github.com/SbgMartin/aws-cdk-eks-gitops-example/blob/eeb4c38cbb1a93097ce04e20818173bd25c3a284/lib/aws-core-infrastructure/base-network-stack.ts#L15
+
 # Stack-Naming
 
 In order to get AWS CloudFormation StackNames which are expressive I went for a typical "Stage-Context" prefix. This is important if you deploy everything to one single AWS Account, so you see immediately if it's DEV, TEST or PROD. The "Context" is (at least to me) always an indicator of business need, purpose or relation to something expressive (e.g. BackendApplication; maybe not the most precise name but in this context it's the only app right now).
