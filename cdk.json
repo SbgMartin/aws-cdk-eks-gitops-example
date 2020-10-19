@@ -1,0 +1,37 @@
+{
+  "app": "npx ts-node bin/cdk-eks-gitops.ts",
+  "context": {
+    "@aws-cdk/core:enableStackNameDuplicates": "true",
+    "aws-cdk:enableDiffNoFail": "true",
+    "@aws-cdk/core:stackRelativeExports": "true",
+    "@aws-cdk/core:newStyleStackSynthesis": true,
+    "common": {
+      "longContext": "GitOpsDemo",
+      "repositoryName": "${YOUR_CODE_COMMIT_REPO_NAME}"
+    },
+    "tools": {
+      "account": "${TOOLS_ACCOUNT}",
+      "region": "${TOOLS_REGION}",
+      "shortPrefix": "Tools",
+      "environmentTag": "tools"
+    },
+    "development": {
+      "account": "${DEV_ACCOUNT}",
+      "region": "${DEV_REGION}",
+      "shortPrefix": "Dev",
+      "environmentTag": "development"
+    },
+    "test": {
+      "account": "${TEST_ACCOUNT}",
+      "region": "${TEST_REGION}",
+      "shortPrefix": "Test",
+      "environmentTag": "test"
+    },
+    "production": {
+      "account": "${PROD_ACCOUNT}",
+      "region": "${PROD_REGION}",
+      "shortPrefix": "Prod",
+      "environmentTag": "production"
+    }
+  }
+}
