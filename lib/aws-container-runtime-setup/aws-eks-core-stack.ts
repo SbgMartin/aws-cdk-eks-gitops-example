@@ -56,11 +56,12 @@ export class EksCoreStack extends Stack {
               'workload-type': 'constant'
           }
       });
+      this.workerNodeGroup.role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('CloudWatchAgentServerPolicy'));
 
       //role for kubectl interaction done by team members - basically you could distinguish here on your organizational needs
       //by adding as many roles you need
       const teamMemberRole = new Role(this,'teamMember',{
-        assumedBy: new AccountPrincipal(props.env?.account)
+        assumedBy: new AccountRootPrincipal()
       });
       teamMemberRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'));
 

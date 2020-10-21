@@ -30,7 +30,7 @@ export class CdkEksGitOpsPipelineStack extends Stack {
     const pipeline = new CdkPipeline(this, 'Pipeline', {
       pipelineName: 'GitOpsDemoInfraPipeline',
       cloudAssemblyArtifact,
-      cdkCliVersion: '1.68.0', //deterministic build-infra (fixed with #10659 issue on GitHub)
+      cdkCliVersion: '1.69.0', //deterministic build-infra (fixed with #10659 issue on GitHub)
 
       sourceAction: new CodeCommitSourceAction({
         actionName: 'CodeCommit',
@@ -59,7 +59,6 @@ export class CdkEksGitOpsPipelineStack extends Stack {
 
       //ToDo: validation step needed with automated approval - precondition for next stage to execute
 
-      //ToDo: deploy to other stage
 /*
       //Stage to deploy all relevant stacks to test account, e.g. for user-acceptance-test
       const testStageDeployment = new CdkEksGitOpsSetupStage(this, `${this.testAccountContext.shortPrefix}-${this.businessContext.longContext}`, {

@@ -2,7 +2,7 @@ import { Construct, Stage, StageProps } from '@aws-cdk/core';
 import { EksCoreStack } from '../aws-container-runtime-setup/aws-eks-core-stack';
 import { BaseNetworkStack } from '../aws-core-infrastructure/base-network-stack'
 import { K8sAlbIngressController } from '../k8s-addon-alb-ingress-controller/k8s-alb-ingress-controller';
-import { K8sAwsContainerInsightsSetup } from '../k8s-addon-aws-container-insights/k8s-aws-container-insights';
+import { K8sAwsContainerInsightsSetup as ContainerInsightsSetupWithCdk8s } from '../k8s-addon-aws-container-insights/k8s-aws-container-insights-setup-with-cdk8s'; 
 import { K8sBackendApplicationSetup } from '../k8s-ingress-definition-cdk8s/k8s-ingress-setup-with-cdk8s';
 
 interface CdkEksGitOpsSetupStageProperties extends StageProps {
@@ -42,7 +42,7 @@ export class CdkEksGitOpsSetupStage extends Stage {
         } );
 
         //deploy AWS Container Insights
-        const awsContainerInsightsStack = new K8sAwsContainerInsightsSetup(this, 'aws-container-insights',{
+        const awsContainerInsightsStack = new ContainerInsightsSetupWithCdk8s(this, 'aws-container-insights',{
             env: props.env,
             environment: props.environment,
             context: props.context,
