@@ -23,6 +23,67 @@ https://github.com/SbgMartin/aws-cdk-eks-gitops-example/blob/eeb4c38cbb1a93097ce
 
 Before you do yarn cdk synth or similar, please look at https://github.com/SbgMartin/aws-cdk-eks-gitops-example/blob/b4e290da1888d9ccc459db2bd6672a19002cad30/cdk.json and either manually enter the values which are relevant to you or pass them as parameters within cdk synth command! Otherwise it will not synthesize.
 
+## Step 1: create an AWS CodeCommit repository
+
+Unlike the other examples which are around on the internet we use an AWS CodeCommit repository here. Please create it using a mechanism of choice (AWS CDK, AWS CLI or even manually). We do not have this included here primarily to decouple the lifecycle of CDK Pipelines and repository.
+
+    aws codecommit create-repository --repository-name "cdk-gitops-demo" --repository-description "CDK Pipelines Demo" --profile <yourAwsProfileName>
+
+As this is a needed reference for creating the AWS CodePipeline "SourceAction" you need to add it to cdk.json by replacing this template expression: ${YOUR_CODE_COMMIT_REPO_NAME}
+
+## Step 2: connect to AWS CodeCommit repository
+
+Ensure that you have cloned this GitHub repository and have "cd" into it.
+
+Follow the instructions on this guide to connect to an AWS CodeCommit repository using your common git client: https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-https-unixes.html
+
+After setting up your git client add the remote to the current git repository :
+
+    git remote add awsrepo https://git-codecommit.{RegionWhereYourCodeCommitRepoResides}.amazonaws.com/v1/repos/cdk-gitops-demo
+
+If you created your AWS CodeCommit repository with AWS CLI then you can reuse value of property "cloneUrlHttp" returned by creation API call.
+
+In order to be able to push code to AWS CodeCommit you need to set the upstream:
+
+    git push --set-upstream awsrepo master
+
+Push the code to the AWS CodeCommit repo using
+
+   git push awsrepo master
+
+The code will appear on AWS CodeCommit repo.
+
+## Step 3: adjust the AccountID and Region
+
+For a starter keep everything in one single AWS Account, you can test multi-account later (is not finished, yet). To make things easy for just trying this and look at the results replace all Account and Region identifiers within cdk.json with your target account and region.
+
+          "account": "${TOOLS_ACCOUNT}",
+          "region": "${TOOLS_REGION}",
+
+Do so at least for "Tools" and "Development".
+
+    git commit -m 'some comment'
+    git push awsrepo master
+
+## Step 4: deploy
+
+    yarn run cdk build
+    yarn run cdk synth
+    yarn run cdk deploy
+
+Instead you can use npm, too. The AWS CodePipeline uses still yarn until you replace within PipelineStack definition
+
+    synthAction: SimpleSynthAction.standardYarnSynth({
+
+with
+
+    synthAction: SimpleSynthAction.standardNpmSynth({
+
+and the corresponding command.
+
+For starting, leave it as is.
+
+From now on each and every commit to the AWS CodeCommit repo will lead to an execution of the AWS CodePipeline behind.
 # Stack-Naming
 
 In order to get AWS CloudFormation StackNames which are expressive I went for a typical "Stage-Context" prefix. This is important if you deploy everything to one single AWS Account, so you see immediately if it's DEV, TEST or PROD. The "Context" is (at least to me) always an indicator of business need, purpose or relation to something expressive (e.g. BackendApplication; maybe not the most precise name but in this context it's the only app right now).

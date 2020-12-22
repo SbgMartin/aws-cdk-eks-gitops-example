@@ -30,7 +30,7 @@ export class CdkEksGitOpsPipelineStack extends Stack {
     const pipeline = new CdkPipeline(this, 'Pipeline', {
       pipelineName: 'GitOpsDemoInfraPipeline',
       cloudAssemblyArtifact,
-      cdkCliVersion: '1.69.0', //deterministic build-infra (fixed with #10659 issue on GitHub)
+      cdkCliVersion: '1.80.0', //deterministic build-infra (fixed with #10659 issue on GitHub)
 
       sourceAction: new CodeCommitSourceAction({
         actionName: 'CodeCommit',
