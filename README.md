@@ -84,6 +84,12 @@ and the corresponding command.
 For starting, leave it as is.
 
 From now on each and every commit to the AWS CodeCommit repo will lead to an execution of the AWS CodePipeline behind.
+
+# How do I access the AWS EKS cluster after its creation?
+
+Within the component "aws-container-runtime-setup" you will find the aws-eks-core-stack.ts file containing the "teamMemberRole" at the end of it. You see that a new AWS IAM Role is created and assigned to aws-auth ConfigMap.
+
+Just assume this role within AWS Console to see the WorkerNodes. Also use this role to execute kubectl commands.
 # Stack-Naming
 
 In order to get AWS CloudFormation StackNames which are expressive I went for a typical "Stage-Context" prefix. This is important if you deploy everything to one single AWS Account, so you see immediately if it's DEV, TEST or PROD. The "Context" is (at least to me) always an indicator of business need, purpose or relation to something expressive (e.g. BackendApplication; maybe not the most precise name but in this context it's the only app right now).
